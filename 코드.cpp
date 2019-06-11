@@ -140,18 +140,19 @@ int Inhibitfunc()
 void EndofDay()
 {
 	total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
+	printf("%s PROFILE\n", type);
+
 	printf("대륙별 %s 비감염자 통계:\n", type);
 	for (int i = 0; i < countryamount;i++)
 		printf(" %s 대륙: %d명(%d%%)\n", countryname[i].name, country[i], country[i] * 100 / maxcountry[i]);//대륙별 살아있는 인원
-
 	printf("총 비감염자: %d명.\n\n\n", total);//살아있는 총 인원
-	printf("Anti-%s 백신 완성도: %d%%\n", type, vac);
 
-	printf("%s PROFILE\n", type);
 	printf("질병 LEVEL: %d \n", virus1.level);
 	printf("%s는 %d%% 확률로 감염됨.\n\n", type, virus1.die);
 
+	printf("Anti-%s 백신 완성도: %d%%\n", type, vac);
 	printf("현재 보유 DNA: %d\n\n\n\n", virus1.DNA);
+
 	printf("다음 날로 넘어가려면 아무 키나 누르십시오...");
 	getch();
 	system("cls");
