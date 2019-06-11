@@ -1,6 +1,6 @@
 #include<stdio.h>
-long long int day=1, a=10000,A=10000, b=20000,B=20000, c=30000,C=30000, d=40000 ,D=40000, e=50000,E=50000, f=60000, F=60000;
-char type[100];
+long long int day=1, a[6]={10000,20000,30000,40000,50000,60000}, A[6]={10000,20000,30000,40000,50000,60000}//대륙 네이밍, A~F
+char day[100];
 //몇번째 날인지, 어느대륙의 남아있는 인구수정의 
 struct disease{
    long long int DNA;
@@ -429,11 +429,7 @@ void vir1(){
       printf("\n");
       printf("\n");
       day=day+1;
-      
-      
-      
-      
-      
+ 
    }
    if(vac.live>=100) printf("실패하였습니다.");
    else printf("성공하였습니다."); 
