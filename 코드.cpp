@@ -178,26 +178,26 @@ void Startscreen()
 	printf("   2406 박세연   2416 전상진   \n");
 	printf("   2417  정욱    2420 최장헌   \n");
 	printf("  시작하려면 질병 이름을 입력  \n");
-	getch();
 }
 void Tutorial()
 {
 	printf("전염병 주식회사에 오신 것을 환영합니다!\n");
-	Sleep(500);
+	Sleep(1000);
 	printf("당신의 목표는 %d개의 대륙의 모든 인간을 당신의 질병에 감염시키는 것입니다!\n", countryamount);
-	Sleep(500);
+	Sleep(1000);
 	printf("이를 위해서는 DNA를 모아 질병을 업그레이드해야합니다.\n");
-	Sleep(500);
+	Sleep(1000);
 	printf("DNA는 각 대륙의 사람들을 감염시켜 얻을 수 있습니다.\n");
-	Sleep(500);
+	Sleep(1000);
 	printf("모인 DNA는 질병 LEVEL, 감염률을 올리거나 백신 완성도를 낮추는 데에 쓸 수 있습니다.\n");
-	Sleep(500);
+	Sleep(1000);
 	printf("백신 완성도가 100%%에 도달하면 패배합니다.\n");
-	Sleep(500);
+	Sleep(1000);
 	printf("한 가지 유의할 점은, 감염이 죽음을 의미하지는 않는다는 것입니다.\n");
-	Sleep(500);
-	printf("견투를 빌며, 게임을 즐기시길 바랍니다!.\n");
-	Sleep(500);
+	Sleep(1000);
+	printf("견투를 빌며, 게임을 즐기시길 바랍니다!\n");
+	Sleep(1000);
+	getch();
 }
 
 void vir()
