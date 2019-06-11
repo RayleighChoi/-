@@ -254,12 +254,11 @@ void vir()
 				printf("3 : 백신 방해하기 \n");   
 				
 				scanf("%d", &choice2);
-				while (choice2!=1||choice2!=3)
+				while (1 != choice2 && choice2 != 3)
 				{
 					printf("유효하지 않은 명령입니다.\n");
 					scanf("%d", &choice2);
 				}
-				break;
 			}
 			else
 			{
@@ -293,8 +292,8 @@ void vir()
 		system("cls");
 		EndofDay();
 	}
-		if (vac >= 100) printf("패배하였습니다.\n걸린 일 수: %d", day);
-		else printf("Congradulations!승리하였습니다\n걸린 일 수: %d",day);
+		if (vac >= 100) printf("  패배하였습니다.\n걸린 일 수: %d", day);
+		else printf("  Congradulations!승리하였습니다\n걸린 일 수: %d",day);
 		return;
 	}
 int main() {
@@ -302,6 +301,7 @@ int main() {
 
 	Startscreen();
 	scanf("%s", type);
+
 	system("cls");
 	printf("\n\n\n튜토리얼(규칙 설명)이 필요하십니까?\n");
 	printf("1:네          다른 키: 아니오      \n");
