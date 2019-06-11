@@ -243,7 +243,42 @@ void Warnvaccine()
 		Sleep(1500);
 	}
 }
-//랜덤 이벤트 발생 필요
+void Randomevent()
+{
+	int randevent = rand();
+	system("cls");
+	switch (randevent % eventRate)
+	{
+	case addDNA: 
+		printf("\n\n   무작위 의사유전자 활성화");
+		printf(" 질병 안의 의사유전자가 우연히 활성을 갖게 되었습니다. 추가 DNA를 얻습니다.");
+		virus1.DNA += randevent % 5 + 5;
+		break;
+	case addVAC:
+		printf("\n\n   과학자들의 미생물에 대한 이해도 증가");
+		printf(" 과학자들이 우연한 결과에 의해 %s에 대한 연구 과정에서 감염의 중요한 인자를 발견합니다.\n", type);
+		printf(" 백신 완성도가 증가합니다.");
+		vac += randevent % 5;
+		break;
+	case lessVAC:
+		printf("\n\n   %s의 변종 발생",type);
+		printf("숙주 내에서 %s가 변종을 일으켰습니다. 백신 개발에 있어서 난항을 겪습니다.\n",type);
+		printf("백신 완성도가 감소합니다.");
+		vac -= randevent % 5;
+			if (vac < 0)
+			vac = 0;
+		break;
+	case addmoreVAC:
+		printf("\n\n   숙주 면역계와의 공진화");
+		printf(" 인간의 면역계가 %s에 대한 면역 기작을 갖게 되기 시작했습니다.\n", type);
+		printf(" 백신 완성도가 크게 증가합니다.");
+		vac += randevent % 5 + 10;
+		break;
+	}
+	getch();
+	system("cls");
+}
+
 void vir()
 {
 	virus1.DNA = 0;
@@ -255,6 +290,7 @@ void vir()
 	
 	
 	while (total > 0 && vac < 100) {
+		Randomevent();
 	mainmenu:
 		system("cls");
 		printf("%d번째 날입니다.\n", day);
