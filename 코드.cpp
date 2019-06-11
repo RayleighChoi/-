@@ -1,3 +1,32 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<conio.h>
+#define countryamount 6
+
+typedef enum upgrades_ { level = 1, infect, inhibit }upgrades;
+typedef enum choose_ { kill = 1, upgrade }choose;
+
+
+typedef struct disease_{
+	int DNA;//DNA양
+	int level;//바이러스 레벨
+	int die;//치사량
+}disease;
+typedef struct countryl_{
+	char name[100];//국가 이름
+}countryl;
+
+disease virus1;
+int vac, vacwarn=0;//백신 및 개발도 경고에 대한 변수
+
+ int day = 1;//지난 일자
+ int country[countryamount] = { 10000,20000,30000,40000,50000,60000 };
+ int Country[countryamount] = { 10000,20000,30000,40000,50000,60000 };//대륙별 인구수
+ int maxcountry[countryamount]= { 10000,20000,30000,40000,50000,60000 };
+ countryl countryname[countryamount] = { {"Asia"},{"Europe"},{"Africa"},{"South Africa"},{"North Africa"},{"Australia"} };// 네이밍 A~F
+char type[100];//질병 이름
+int total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
+
 void killfunc(int countrynum)
 {
 	countrynum--;
@@ -180,6 +209,33 @@ void Tutorial()
 	printf("견투를 빌며, 게임을 즐기시길 바랍니다!\n");
 	Sleep(1000);
 	getch();
+}
+void Warnvaccine()
+{
+	system("cls");
+	if (vacwarn==0&&vac >= 25)
+	{
+	printf("Anti-%s 약물에 대한 연구가 25%% 완료되었습니다.\n");
+	printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮추는 것을 고려하십시오.");
+	vacwarn++;
+	}
+	else if (vacwarn == 1 &&vac >= 50)
+	{
+		printf("Anti-%s 약물에 대한 연구가 50%% 완료되었습니다.\n");
+		printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮출 수 있습니다.");
+		vacwarn++;
+	}
+	else if (vacwarn == 2 &&vac >= 75)
+	{
+		printf("Anti-%s 약물에 대한 연구가 75%% 완료되었습니다.\n");
+		printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮춰야합니다.");
+		vacwarn++;
+	}
+	else if (vac >= 95)
+	{
+		printf("Anti-%s 약물에 대한 연구가 95%% 완료되었습니다.\n");
+		printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮출 필요가 있습니다!");
+	}
 }
 //랜덤 이벤트 발생 필요
 void vir()
