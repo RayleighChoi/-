@@ -1,32 +1,3 @@
-#include<stdio.h>
-#include<Windows.h>
-#include<conio.h>
-#define countryamount 6
-
-typedef enum upgrades_ { level = 1, infect, inhibit }upgrades;
-typedef enum choose_ { kill = 1, upgrade }choose;
-
-
-typedef struct disease_{
-	int DNA;//DNA양
-	int level;//바이러스 레벨
-	int die;//치사량
-}disease;
-typedef struct countryl_{
-	char name[100];//국가 이름
-}countryl;
-
-disease virus1;
-int vac;
-
- int day = 1;//지난 일자
- int country[countryamount] = { 10000,20000,30000,40000,50000,60000 };
- int Country[countryamount] = { 10000,20000,30000,40000,50000,60000 };//대륙별 인구수
- int maxcountry[countryamount]= { 10000,20000,30000,40000,50000,60000 };
- countryl countryname[countryamount] = { {"Asia"},{"Europe"},{"Africa"},{"South Africa"},{"North Africa"},{"Australia"} };// 네이밍 A~F
-char type[100];//질병 이름
-int total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
-
 void killfunc(int countrynum)
 {
 	countrynum--;
@@ -65,7 +36,7 @@ void vaccinefunc()
 		Sleep(1000);
 	}
 }
-void LVfunc() 
+int LVfunc() 
 {
 	int amount; //얼마나 업그레이드 할건지 
 	
@@ -79,17 +50,19 @@ void LVfunc()
 		printf("다시 입력해주세요. 만일 업그레이드 하지 못하는 상황이면 0을 누르세요");
 		scanf("%d", &amount);
 	}
+	if (amount == 0)
+		return -1;
 	virus1.DNA -= amount * 100;              //DNA사용하고 
 	virus1.level += amount;                    //업그레이드 해주고 
 
 	vaccinefunc();
 
 }
-void Infectfunc()
+int Infectfunc()
 {
 	int amount = 0;
 	printf("얼마 업그레이드 하실겁니까?\n");                      //얼마나 업그레이드 할건지 
-	printf("치사율 1%%당 DNA 50개가 필요합니다.\n");
+	printf("감염률 1%%당 DNA 50개가 필요합니다.\n");
 	printf("보유 DNA: %d\n", virus1.DNA);
 	scanf("%d", &amount);
 
@@ -99,6 +72,9 @@ void Infectfunc()
 		scanf("%d", &amount);
 	}
 
+	if (amount == 0)
+		return -1;
+
 	virus1.DNA -= amount * 50;                               //DNA 사용한만큼 빼주고 
 	virus1.die += amount;
 
@@ -106,7 +82,7 @@ void Infectfunc()
 		virus1.die = 100;//치사율 최댓값 100으로 설정
 	vaccinefunc();
 }
-void Inhibitfunc()
+int Inhibitfunc()
 {
 	int amount = 0;
 	printf("백신의 완성도를 얼마 감소시킬겁니까?\n");
@@ -120,6 +96,9 @@ void Inhibitfunc()
 		printf("다시 입력해주세요. 만일 방해하지 못하는 상황이면 0을 누르세요\n");
 		scanf("%d", &amount);
 	}
+
+	if (amount == 0)
+		return -1;
 
 	vac -= amount;
 	virus1.DNA -= amount * 200;
@@ -202,7 +181,7 @@ void Tutorial()
 	Sleep(1000);
 	getch();
 }
-
+//랜덤 이벤트 발생 필요
 void vir()
 {
 	virus1.DNA = 0;
@@ -210,15 +189,17 @@ void vir()
 	virus1.die = 4;
 	vac = 0;//초기값설정 
 	int choice1, choice2;
+	int back;//뒤로가기 위한 변수
 	
 	
 	while (total > 0 && vac < 100) {
+	mainmenu:
 		system("cls");
 		printf("%d번째 날입니다.\n", day);
 		printf("오늘 수행할 작업을 선택하십시오.\n\n");
 		printf("1 : 감염시키기\n");
 		printf("2 : 업그레이드 또는 백신 막기\n");
-
+		
 		scanf("%d", &choice1); //죽일지 업그레이드할지 선택 
 		while (choice1 != 1 && choice1 != 2)
 		{
@@ -236,8 +217,13 @@ void vir()
 
 			for (int i = 0; i < countryamount;i++)
 					printf("%d : %s (%d명)\n", i+1, countryname[i].name, country[i]);
+			printf("\n0: 뒤로가기\n");
 
 			scanf("%d", &choice2); //대륙 선택
+
+			if (choice2 == 0)
+				goto mainmenu;
+
 			while (0 >= choice2 || choice2 > countryamount)
 			{
 				printf("유효하지 않은 명령입니다.\n");
@@ -252,8 +238,14 @@ void vir()
 				printf("1 : LEVEL 업그레이드 \n");
 				printf("X : 감염률이 최대치(100%%)입니다. \n");//감염률100%면 업그레이드 못하게 함 
 				printf("3 : 백신 방해하기 \n");   
-				
+				printf("\n0: 뒤로가기\n");
+
 				scanf("%d", &choice2);
+				printf("\n\n");
+
+				if (choice2 == 0)
+					goto mainmenu;
+
 				while (1 != choice2 && choice2 != 3)
 				{
 					printf("유효하지 않은 명령입니다.\n");
@@ -262,11 +254,18 @@ void vir()
 			}
 			else
 			{
+			upgrademenu:
 				printf("1 : LEVEL 업그레이드 \n");
 				printf("2 : 감염률 업그레이드 \n");
 				printf("3 : 백신 방해하기 \n");
+				printf("\n0: 뒤로가기\n");
 
 				scanf("%d", &choice2);
+				printf("\n\n");
+
+				if (choice2 == 0)
+					goto mainmenu;
+				
 				while (0 >= choice2 || choice2 > 3)
 				{
 					printf("유효하지 않은 명령입니다.\n");
@@ -275,16 +274,22 @@ void vir()
 			}
 
 			switch (choice2) {
-			case level:  // LEVEL업그레이드 
-				LVfunc();
+			case level:  // LEVEL 업그레이드 
+				back=LVfunc();
+				if (back == -1)
+					goto upgrademenu;
 				break;
 
 			case infect: //감염률 업그레이드 
-				Infectfunc();
+				back=Infectfunc();
+				if (back == -1)
+					goto upgrademenu;
 				break;
 
 			case inhibit:  //백신 방해 
-				Inhibitfunc();
+				back=Inhibitfunc();
+				if (back == -1)
+					goto upgrademenu;
 				break;
 			}
 		}
@@ -313,4 +318,4 @@ int main() {
 	vir();
 	getch();
 	return 0;
-}//Special Thanks to. 신수&나무사관
+}//Special Thanks to. 신수&나무사관, 
