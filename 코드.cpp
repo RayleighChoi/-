@@ -3,7 +3,7 @@
 #include<conio.h>
 #define countryamount 6
 
-typedef enum upgrades_ { level = 1, death, inhibit }upgrades;
+typedef enum upgrades_ { level = 1, infect, inhibit }upgrades;
 typedef enum choose_ { kill = 1, upgrade }choose;
 
 
@@ -23,7 +23,7 @@ int vac;
  int country[countryamount] = { 10000,20000,30000,40000,50000,60000 };
  int Country[countryamount] = { 10000,20000,30000,40000,50000,60000 };//대륙별 인구수
  int maxcountry[countryamount]= { 10000,20000,30000,40000,50000,60000 };
-countryl countryname[countryamount] = { {'a'},{'b'},{'c'},{'d'},{'e'},{'f'} };// 네이밍 A~F
+ countryl countryname[countryamount] = { {"Asia"},{"Europe"},{"Africa"},{"South Africa"},{"North Africa"},{"Australia"} };// 네이밍 A~F
 char type[100];//질병 이름
 int total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
 
@@ -67,19 +67,20 @@ void vaccinefunc()
 }
 void LVfunc() 
 {
-	int amuont; //얼마나 업그레이드 할건지 
+	int amount; //얼마나 업그레이드 할건지 
 	
-	printf("얼마 업그레이드 하실겁니까?\n");
+	printf("얼마나 업그레이드 하실겁니까?\n");
 	printf("LEVEL 1 당 DNA 100개가 필요합니다.\n");
-	scanf("%d", &amuont);
+	printf("보유 DNA: %d\n", virus1.DNA);
+	scanf("%d", &amount);
 
-	while (virus1.DNA - amuont * 100 < 0)
+	while (virus1.DNA - amount * 100 < 0)
 	{
 		printf("다시 입력해주세요. 만일 업그레이드 하지 못하는 상황이면 0을 누르세요");
-		scanf("%d", &amuont);
+		scanf("%d", &amount);
 	}
-	virus1.DNA -= amuont * 100;              //DNA사용하고 
-	virus1.level += amuont;                    //업그레이드 해주고 
+	virus1.DNA -= amount * 100;              //DNA사용하고 
+	virus1.level += amount;                    //업그레이드 해주고 
 
 	vaccinefunc();
 
@@ -87,8 +88,9 @@ void LVfunc()
 void Infectfunc()
 {
 	int amount = 0;
-	printf("얼마 업그레이드 하실겁니까?\n");                      //얼마나 업그레이드 할건지 
-	printf("치사율 1%%당 DNA 50개가 필요합니다.\n");
+	printf("얼마나 업그레이드 하실겁니까?\n");
+	printf("감염률 1%%당 DNA 50개가 필요합니다.\n");
+	printf("보유 DNA: %d\n", virus1.DNA);
 	scanf("%d", &amount);
 
 	while (virus1.DNA - amount * 50 < 0) 
@@ -107,8 +109,9 @@ void Infectfunc()
 void Inhibitfunc()
 {
 	int amount = 0;
-	printf("백신의 완성도를 얼마 감소시킬겁니까?\n");
+	printf("백신의 완성도를 얼마나 감소시까?\n");
 	printf("백신의 완성도 1%% 감소시키는데 DNA 200개가 필요합니다.\n");
+	printf("보유 DNA: %d\n", virus1.DNA);
 
 	scanf("%d", &amount);
 
@@ -205,11 +208,10 @@ void vir()
 	virus1.DNA = 0;
 	virus1.level = 1;
 	virus1.die = 4;
-	vac = 0;
+	vac = 0;//초기값설정 
 	int choice1, choice2;
 	
-	//초기값설정 
-
+	
 	while (total > 0 && vac < 100) {
 		system("cls");
 		printf("%d번째 날입니다.\n", day);
@@ -233,7 +235,7 @@ void vir()
 			printf("어느 대륙을 감염시키겠습니까?\n");
 
 			for (int i = 0; i < countryamount;i++)
-					printf("%d : %s \n", i+1, countryname[i].name);
+					printf("%d : %s (%d명)\n", i+1, countryname[i].name, country[i]);
 
 			scanf("%d", &choice2); //대륙 선택
 			while (0 >= choice2 || choice2 > countryamount)
@@ -252,7 +254,7 @@ void vir()
 				printf("3 : 백신 방해하기 \n");   
 				
 				scanf("%d", &choice2);
-				while (choice2!=1||choice2!=3)
+				while (choice2!=1&&choice2!=3)
 				{
 					printf("유효하지 않은 명령입니다.\n");
 					scanf("%d", &choice2);
@@ -278,7 +280,7 @@ void vir()
 				LVfunc();
 				break;
 
-			case death: //치사율 업그레이드 
+			case infect: //감염률 업그레이드 
 				Infectfunc();
 				break;
 
@@ -295,14 +297,15 @@ void vir()
 		else printf("Congradulations!승리하였습니다\n걸린 일 수: %d",day);
 		return;
 	}
-int choice;
+int main() {
+	int choice;
 
 	Startscreen();
 	scanf("%s", type);
 	system("cls");
 	printf("\n\n\n튜토리얼(규칙 설명)이 필요하십니까?\n");
 	printf("1:네          다른 키: 아니오      \n");
-	scanf("%d", choice);
+	scanf("%d", &choice);
 
 	if (choice == 1)
 		Tutorial();
