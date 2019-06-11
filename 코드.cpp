@@ -112,7 +112,7 @@ void Inhibitfunc()
 
 	scanf("%d", &amount);
 
-	while (vac -= amount <= 0&&vac!=0)
+	while (vac < amount && vac != 0)
 	{
 		printf("다시 입력해주세요. 만일 방해하지 못하는 상황이면 0을 누르세요\n");
 		scanf("%d", &amount);
@@ -143,6 +143,42 @@ void EndofDay()
 	system("cls");
 	day = day + 1;
 	total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
+}
+
+void Startscreen()
+{
+	printf("                               \n");
+	printf("                               \n");
+	printf("           .,    ,.            \n");
+	printf("         .:,      ,;.          \n");
+	printf("         *.         *          \n");
+	printf("        !!          !*         \n");
+	printf("       ,@-          -@,        \n");
+	printf("       ;@.          .@:        \n");
+	printf("       =@.          .@=        \n");
+	printf("       #@-  .-::-.  -@$        \n");
+	printf("       $@* =@@@@@@= *@$        \n");
+	printf("       !@@-=$!::!$$-@@!        \n");
+	printf("       ~@@@~      ~@@@-        \n");
+	printf("    -*@@@@@@*;--;*@@@@@@*,     \n");
+	printf("   ~@@@@@@@@@@==@@@@@@@@@@-    \n");
+	printf("  #*   ~@~-#@-  -@#;-#~  .*#   \n");
+	printf(" =     ,@=  .$!!$-  *@,     $  \n");
+	printf(".~      #@,  #@@@.  ##.     ~. \n");
+	printf("..      ~@#, $@@$ .#@;      .. \n");
+	printf("         !@#-=@@$-$@=        . \n");
+	printf(" .        !@:$@@#:@$           \n");
+	printf("           ,-@@@@--            \n");
+	printf("            #@@@@#             \n");
+	printf("   .       =@@**@@*            \n");
+	printf("    ,-..,:$@@;  ;@@$~.  ,,.    \n");
+	printf("     .*@@@@!     .*@@@@$-      \n");
+	printf("        ..          ...        \n");
+	printf("         Infection Inc.        \n");
+	printf("   2406 박세연   2416 전상진   \n");
+	printf("   2417  정욱    2420 최장헌   \n");
+	printf("  시작하려면 질병 이름을 입력  \n");
+	getch();
 }
 
 void vir1()
