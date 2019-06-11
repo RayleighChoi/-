@@ -220,23 +220,27 @@ void Warnvaccine()
 	printf("Anti-%s 약물에 대한 연구가 25%% 완료되었습니다.\n",type);
 	printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮추는 것을 고려하십시오.");
 	vacwarn++;
+	Sleep(1500);
 	}
 	else if (vacwarn == 1 &&vac >= 50)
 	{
 		printf("Anti-%s 약물에 대한 연구가 50%% 완료되었습니다.\n", type);
 		printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮출 수 있습니다.");
 		vacwarn++;
+		Sleep(1500);
 	}
 	else if (vacwarn == 2 &&vac >= 75)
 	{
 		printf("Anti-%s 약물에 대한 연구가 75%% 완료되었습니다.\n", type);
 		printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮춰야합니다.");
 		vacwarn++;
+		Sleep(1500);
 	}
 	else if (vac >= 95)
 	{
 		printf("Anti-%s 약물에 대한 연구가 95%% 완료되었습니다.\n", type);
 		printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮출 필요가 있습니다!");
+		Sleep(1500);
 	}
 }
 //랜덤 이벤트 발생 필요
