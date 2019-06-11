@@ -6,16 +6,16 @@ struct disease{
    long long int DNA;
    int level;
    int die;
-}viruse1, viruse2;
+}virus1, virus2;
 //질병정보 
 struct vaccin{
    int live;
 }vac;
 //백신정보 
 void vir1(){
-   viruse1.DNA=0 ;
-   viruse1.level=1;
-   viruse1.die=4 ;
+   virus1.DNA=0 ;
+   virus1.level=1;
+   virus1.die=4 ;
    vac.live=0;
    
    long long int lipp=a+b+c+d+e+f, dipp=0;
