@@ -181,7 +181,7 @@ void vir1()
 					printf("%d : %s \n", i+1, countryname[i].name);
 
 			scanf("%d", &choice2); //대륙 선택
-			while (0 >= choice2 && choice2 > countryamount)
+			while (0 >= choice2 || choice2 > countryamount)
 			{
 				printf("유효하지 않은 명령입니다.\n");
 				scanf("%d", &choice2); 
