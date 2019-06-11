@@ -129,6 +129,7 @@ void Inhibitfunc()
 }
 void EndofDay()
 {
+	total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
 	printf("대륙별 %s 비감염자 통계:\n", type);
 	for (int i = 0; i < countryamount;i++)
 		printf(" %s 대륙: %d명(%d%%)\n", countryname[i].name, country[i], country[i] * 100 / maxcountry[i]);//대륙별 살아있는 인원
@@ -145,7 +146,6 @@ void EndofDay()
 	getch();
 	system("cls");
 	day = day + 1;
-	total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
 }
 
 void Startscreen()
