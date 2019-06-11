@@ -19,10 +19,11 @@ typedef struct countryl_{
 disease virus1;
 int vac;
 
-long long int day = 1;//지난 일자
-long long int country[countryamount] = { 10000,20000,30000,40000,50000,60000 };
-long long int Country[countryamount] = { 10000,20000,30000,40000,50000,60000 };//대륙별 인구수, 네이밍 A~F
-countryl countryname[countryamount] = { {'a'},{'b'},{'c'},{'d'},{'e'},{'f'} };
+ int day = 1;//지난 일자
+ int country[countryamount] = { 10000,20000,30000,40000,50000,60000 };
+ int Country[countryamount] = { 10000,20000,30000,40000,50000,60000 };//대륙별 인구수
+ int maxcountry[countryamount]= { 10000,20000,30000,40000,50000,60000 };
+countryl countryname[countryamount] = { {'a'},{'b'},{'c'},{'d'},{'e'},{'f'} };// 네이밍 A~F
 char type[100];//질병 이름
 
 void killfunc(int countrynum)
@@ -35,14 +36,14 @@ void killfunc(int countrynum)
 	{
 		country[countrynum] -= 10 * (virus1.level) * (virus1.die); //선택한 대륙의 사람 감염
 		virus1.DNA += 10 * (virus1.level) * (virus1.die);      //감염자 수만큼 DNA 획득 
-		printf("%s대륙에서 %d명이 감염되어 %lld명 남았습니다.\n", countryname[countrynum].name, 10 * (virus1.level) * (virus1.die), country[countrynum]);
-		printf("현재까지 획득한 DNA양은 %lld입니다.\n", virus1.DNA);
+		printf("%s대륙에서 %d명이 감염되어 %d명 남았습니다.\n", countryname[countrynum].name, 10 * (virus1.level) * (virus1.die), country[countrynum]);
+		printf("현재까지 획득한 DNA양은 %d입니다.\n", virus1.DNA);
 		printf("그 사이 백신이 %d%% 완성되었습니다.\n", vac);
 	}
 	else {                                                            //만일 다 죽였으면 0으로 만들어 준다. 
-		printf("%s대륙에서 %lld명이 감염되어 0명 남았습니다.\n", countryname[countrynum].name, country[countrynum]);
+		printf("%s대륙에서 %d명이 감염되어 0명 남았습니다.\n", countryname[countrynum].name, country[countrynum]);
 		virus1.DNA += country[countrynum];   //죽인만큼 DNA얻고
-		printf("현재까지 획득한 DNA양은 %lld입니다.\n", virus1.DNA);
+		printf("현재까지 획득한 DNA양은 %d입니다.\n", virus1.DNA);
 		printf("그 사이 백신이 %d%% 완성되었습니다.\n", vac);
 		country[countrynum] = 0;
 	}
@@ -57,7 +58,7 @@ void vaccinefunc()
 	}
 	else {
 
-		printf("당신이 업그레이드 하는 동안 백신으로 %s대륙 에서 %lld명이 살아났습니다.\n", countryname[day % 6].name, Country[day % 6] - country[day % 6]);
+		printf("당신이 업그레이드 하는 동안 백신으로 %s대륙 에서 %d명이 살아났습니다.\n", countryname[day % 6].name, Country[day % 6] - country[day % 6]);
 		printf("\n");
 		country[day % 6] = Country[day % 6];
 		Sleep(1000);
@@ -110,7 +111,7 @@ void Inhibitfunc()
 
 	scanf("%d", &amount);
 
-	while (vac -= amount < 0)
+	while (vac -= amount <= 0&&vac!=0)
 	{
 		printf("다시 입력해주세요. 만일 방해하지 못하는 상황이면 0을 누르세요\n");
 		scanf("%d", &amount);
@@ -135,7 +136,7 @@ void vir1()
 
 	while (lipp >= 0 && vac < 100) {
 		system("cls");
-		printf("%lld번째 날입니다.\n", day);
+		printf("%d번째 날입니다.\n", day);
 		printf("오늘 수행할 작업을 선택하십시오.\n\n");
 		printf("1 : 감염시키기\n");
 		printf("2 : 업그레이드 또는 백신 막기\n");
@@ -171,11 +172,11 @@ void vir1()
 			if (virus1.die == 100)
 			{
 				printf("1 : LEVEL 업그레이드 \n");
-				printf("X : 현재 감염률은 100%%여서 늘릴 수 없습니다. \n");//감염률100%면 업그레이드 못하게 함 
+				printf("X : 감염률이 최대치(100%%)입니다. \n");//감염률100%면 업그레이드 못하게 함 
 				printf("3 : 백신 방해하기 \n");   
 				
 				scanf("%d", &choice2);
-				while (choice2!=1||choice2!=3)
+				while (choice2!=1&&choice2!=3)
 				{
 					printf("유효하지 않은 명령입니다.\n");
 					scanf("%d", &choice2);
@@ -185,11 +186,11 @@ void vir1()
 			else
 			{
 				printf("1 : LEVEL 업그레이드 \n");
-				printf("2 : 치사량 업그레이드 하기 \n");
+				printf("2 : 감염률 업그레이드 \n");
 				printf("3 : 백신 방해하기 \n");
 
 				scanf("%d", &choice2);
-				while (0 >= choice2 && choice2 > 3)
+				while (0 >= choice2 || choice2 > 3)
 				{
 					printf("유효하지 않은 명령입니다.\n");
 					scanf("%d", &choice2);
@@ -213,16 +214,17 @@ void vir1()
 
 		system("cls");
 		//하루 지나고 상태출력 
-
+		printf("대륙별 %s 비감염자 통계:\n", type);
 		for (int i = 0; i < countryamount;i++)
-			printf("현재 %s 대륙에 총 %lld명 살아있습니다\n", countryname[i].name, country[i]);//대륙별 살아있는 인원
+			printf(" %s 대륙: %d명(%d%%)\n", countryname[i].name, country[i],country[i]/maxcountry[i]);//대륙별 살아있는 인원
 
-		printf("현재 총 %lld명 살아있습니다.\n\n\n", lipp);//살아있는 총 인원
+		printf("총 비감염자: %d명.\n\n\n", lipp);//살아있는 총 인원
 
-		printf("현재 백신의 완성도는 %d%% 입니다.\n", vac);
-		printf("현재 보유하고 있는 DNA양은 %lld 입니다.\n", virus1.DNA);
-		printf("현재 LEVEL은 %d 입니다.\n", virus1.level);
-		printf("현재 질병의 감염률은 %d 입니다.\n\n\n\n\n", virus1.die);
+		printf("Anti-%s 백신 완성도: %d%%\n",type, vac);
+		printf("현재 보유 DNA: %d\n", virus1.DNA);
+		printf("%s PROFILE\n");
+		printf("질병 LEVEL: %d \n", virus1.level);
+		printf("%s는 %d%% 확률로 감염됨.\n\n\n\n\n",type, virus1.die);
 		printf("다음 날로 넘어가려면 아무 키나 누르십시오...");
 		getch();
 		system("cls");
