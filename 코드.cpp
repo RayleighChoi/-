@@ -62,7 +62,7 @@ void vaccinefunc()
 		printf("당신이 업그레이드 하는 동안 백신으로 %s대륙 에서 %d명이 살아났습니다.\n", countryname[day % 6].name, Country[day % 6] - country[day % 6]);
 		printf("\n");
 		country[day % 6] = Country[day % 6];
-		Sleep(1000);
+		Sleep(2000);
 	}
 }
 int LVfunc() 
@@ -85,7 +85,7 @@ int LVfunc()
 	virus1.level += amount;                    //업그레이드 해주고 
 
 	vaccinefunc();
-
+	return 0;
 }
 int Infectfunc()
 {
@@ -110,6 +110,7 @@ int Infectfunc()
 	if (virus1.die > 100)  
 		virus1.die = 100;//치사율 최댓값 100으로 설정
 	vaccinefunc();
+	return 0;
 }
 int Inhibitfunc()
 {
@@ -133,7 +134,8 @@ int Inhibitfunc()
 	virus1.DNA -= amount * 200;
 	if (vac <= 0)
 		vac = 0;//백신 개발은 0 이하로 내려갈 수 없음.
-	Sleep(1000);
+	Sleep(2000);
+	return 0;
 }
 void EndofDay()
 {
@@ -215,25 +217,25 @@ void Warnvaccine()
 	system("cls");
 	if (vacwarn==0&&vac >= 25)
 	{
-	printf("Anti-%s 약물에 대한 연구가 25%% 완료되었습니다.\n");
+	printf("Anti-%s 약물에 대한 연구가 25%% 완료되었습니다.\n",type);
 	printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮추는 것을 고려하십시오.");
 	vacwarn++;
 	}
 	else if (vacwarn == 1 &&vac >= 50)
 	{
-		printf("Anti-%s 약물에 대한 연구가 50%% 완료되었습니다.\n");
+		printf("Anti-%s 약물에 대한 연구가 50%% 완료되었습니다.\n", type);
 		printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮출 수 있습니다.");
 		vacwarn++;
 	}
 	else if (vacwarn == 2 &&vac >= 75)
 	{
-		printf("Anti-%s 약물에 대한 연구가 75%% 완료되었습니다.\n");
+		printf("Anti-%s 약물에 대한 연구가 75%% 완료되었습니다.\n", type);
 		printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮춰야합니다.");
 		vacwarn++;
 	}
 	else if (vac >= 95)
 	{
-		printf("Anti-%s 약물에 대한 연구가 95%% 완료되었습니다.\n");
+		printf("Anti-%s 약물에 대한 연구가 95%% 완료되었습니다.\n", type);
 		printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮출 필요가 있습니다!");
 	}
 }
