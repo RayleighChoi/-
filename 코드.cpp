@@ -41,12 +41,12 @@ void killfunc(int countrynum)
 		printf("현재까지 획득한 DNA양은 %d입니다.\n", virus1.DNA);
 		printf("그 사이 백신이 %d%% 완성되었습니다.\n", vac);
 	}
-	else {                                                            //만일 다 죽였으면 0으로 만들어 준다. 
+	else {                                                            
 		printf("%s대륙에서 %d명이 감염되어 0명 남았습니다.\n", countryname[countrynum].name, country[countrynum]);
 		virus1.DNA += country[countrynum];   //죽인만큼 DNA얻고
 		printf("현재까지 획득한 DNA양은 %d입니다.\n", virus1.DNA);
 		printf("그 사이 백신이 %d%% 완성되었습니다.\n", vac);
-		country[countrynum] = 0;
+		country[countrynum] = 0;//감염 가능 인원이 비감염자보다 많으면 비감염자 0으로 만듦
 	}
 	Sleep(1000);
 }
@@ -88,8 +88,8 @@ void LVfunc()
 void Infectfunc()
 {
 	int amount = 0;
-	printf("얼마나 업그레이드 하실겁니까?\n");
-	printf("감염률 1%%당 DNA 50개가 필요합니다.\n");
+	printf("얼마 업그레이드 하실겁니까?\n");                      //얼마나 업그레이드 할건지 
+	printf("치사율 1%%당 DNA 50개가 필요합니다.\n");
 	printf("보유 DNA: %d\n", virus1.DNA);
 	scanf("%d", &amount);
 
@@ -109,7 +109,7 @@ void Infectfunc()
 void Inhibitfunc()
 {
 	int amount = 0;
-	printf("백신의 완성도를 얼마나 감소시까?\n");
+	printf("백신의 완성도를 얼마 감소시킬겁니까?\n");
 	printf("백신의 완성도 1%% 감소시키는데 DNA 200개가 필요합니다.\n");
 	printf("보유 DNA: %d\n", virus1.DNA);
 
@@ -122,7 +122,7 @@ void Inhibitfunc()
 	}
 
 	vac -= amount;
-
+	virus1.DNA -= amount * 200;
 	if (vac <= 0)
 		vac = 0;//백신 개발은 0 이하로 내려갈 수 없음.
 	Sleep(1000);
@@ -254,7 +254,7 @@ void vir()
 				printf("3 : 백신 방해하기 \n");   
 				
 				scanf("%d", &choice2);
-				while (choice2!=1&&choice2!=3)
+				while (choice2!=1||choice2!=3)
 				{
 					printf("유효하지 않은 명령입니다.\n");
 					scanf("%d", &choice2);
@@ -313,4 +313,4 @@ int main() {
 	vir();
 	getch();
 	return 0;
-}
+}//Special Thanks to. 신수&나무사관
