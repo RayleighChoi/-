@@ -27,6 +27,7 @@ char type[100];//질병 이름
 
 void killfunc(int countrynum)
 {
+	countrynum--;
 	vac += (virus1.die) / 4; //감염률/4 만큼 백신 연구 올라감
 	if (vac > 100) vac = 100;            //백신 최대치는 100
 
@@ -81,7 +82,7 @@ void LVfunc()
 	vaccinefunc();
 
 }
-void Deadfunc()
+void Infectfunc()
 {
 	int amount = 0;
 	printf("얼마 업그레이드 하실겁니까?\n");                      //얼마나 업그레이드 할건지 
@@ -139,8 +140,12 @@ void vir1()
 		printf("1 : 감염시키기\n");
 		printf("2 : 업그레이드 또는 백신 막기\n");
 
-
 		scanf("%d", &choice1); //죽일지 업그레이드할지 선택 
+		while (choice1 != 1 && choice1 != 2)
+		{
+			printf("유효하지 않은 명령입니다.\n");
+			scanf("%d", &choice2);
+		}
 		printf("\n");
 
 
@@ -154,8 +159,11 @@ void vir1()
 					printf("%d : %s \n", i+1, countryname[i].name);
 
 			scanf("%d", &choice2); //대륙 선택
-			while (0 >= choice2||choice2 > countryamount)
+			while (0 >= choice2 && choice2 > countryamount)
+			{
 				printf("유효하지 않은 명령입니다.\n");
+				scanf("%d", &choice2); 
+			}
 				killfunc(choice2);
 			break;
 
@@ -163,9 +171,15 @@ void vir1()
 			if (virus1.die == 100)
 			{
 				printf("1 : LEVEL 업그레이드 \n");
-				printf("X : 현재 치사량은 100%%여서 늘릴 수 없습니다. \n");
-				printf("3 : 백신 방해하기 \n");                            //치사량100%면 업그레이드 못하게 함 
+				printf("X : 현재 감염률은 100%%여서 늘릴 수 없습니다. \n");//감염률100%면 업그레이드 못하게 함 
+				printf("3 : 백신 방해하기 \n");   
+				
 				scanf("%d", &choice2);
+				while (choice2!=1||choice2!=3)
+				{
+					printf("유효하지 않은 명령입니다.\n");
+					scanf("%d", &choice2);
+				}
 				break;
 			}
 			else
@@ -173,7 +187,13 @@ void vir1()
 				printf("1 : LEVEL 업그레이드 \n");
 				printf("2 : 치사량 업그레이드 하기 \n");
 				printf("3 : 백신 방해하기 \n");
-				scanf("%d", &choice2);                               //뭐업그레이드 할지 선택 
+
+				scanf("%d", &choice2);
+				while (0 >= choice2 || choice2 > 3)
+				{
+					printf("유효하지 않은 명령입니다.\n");
+					scanf("%d", &choice2);
+				}
 			}
 
 			switch (choice2) {
@@ -182,7 +202,7 @@ void vir1()
 				break;
 
 			case death: //치사율 업그레이드 
-				Deadfunc();
+				Infectfunc();
 				break;
 
 			case inhibit:  //백신 방해 
@@ -202,7 +222,7 @@ void vir1()
 		printf("현재 백신의 완성도는 %d%% 입니다.\n", vac);
 		printf("현재 보유하고 있는 DNA양은 %lld 입니다.\n", virus1.DNA);
 		printf("현재 LEVEL은 %d 입니다.\n", virus1.level);
-		printf("현재 질병의 치사율은 %d 입니다.\n\n\n\n\n", virus1.die);
+		printf("현재 질병의 감염률은 %d 입니다.\n\n\n\n\n", virus1.die);
 		printf("다음 날로 넘어가려면 아무 키나 누르십시오...");
 		getch();
 		system("cls");
