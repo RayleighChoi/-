@@ -189,7 +189,7 @@ void vir1()
 				printf("3 : 백신 방해하기 \n");
 
 				scanf("%d", &choice2);
-				while (0 >= choice2 || choice2 > 3)
+				while (0 >= choice2 && choice2 > 3)
 				{
 					printf("유효하지 않은 명령입니다.\n");
 					scanf("%d", &choice2);
