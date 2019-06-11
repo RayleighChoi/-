@@ -8,7 +8,7 @@ typedef enum choose_ { kill = 1, upgrade }choose;
 
 
 typedef struct disease_{
-	long long int DNA;//DNA양
+	int DNA;//DNA양
 	int level;//바이러스 레벨
 	int die;//치사량
 }disease;
@@ -25,6 +25,7 @@ int vac;
  int maxcountry[countryamount]= { 10000,20000,30000,40000,50000,60000 };
 countryl countryname[countryamount] = { {'a'},{'b'},{'c'},{'d'},{'e'},{'f'} };// 네이밍 A~F
 char type[100];//질병 이름
+int total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
 
 void killfunc(int countrynum)
 {
@@ -123,6 +124,26 @@ void Inhibitfunc()
 		vac = 0;//백신 개발은 0 이하로 내려갈 수 없음.
 	Sleep(1000);
 }
+void EndofDay()
+{
+	printf("대륙별 %s 비감염자 통계:\n", type);
+	for (int i = 0; i < countryamount;i++)
+		printf(" %s 대륙: %d명(%d%%)\n", countryname[i].name, country[i], country[i] * 100 / maxcountry[i]);//대륙별 살아있는 인원
+
+	printf("총 비감염자: %d명.\n\n\n", total);//살아있는 총 인원
+	printf("Anti-%s 백신 완성도: %d%%\n", type, vac);
+
+	printf("%s PROFILE\n", type);
+	printf("질병 LEVEL: %d \n", virus1.level);
+	printf("%s는 %d%% 확률로 감염됨.\n\n", type, virus1.die);
+
+	printf("현재 보유 DNA: %d\n\n\n\n", virus1.DNA);
+	printf("다음 날로 넘어가려면 아무 키나 누르십시오...");
+	getch();
+	system("cls");
+	day = day + 1;
+	total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
+}
 
 void vir1()
 {
@@ -131,10 +152,10 @@ void vir1()
 	virus1.die = 4;
 	vac = 0;
 	int choice1, choice2;
-	long long int lipp = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
+	
 	//초기값설정 
 
-	while (lipp >= 0 && vac < 100) {
+	while (total > 0 && vac < 100) {
 		system("cls");
 		printf("%d번째 날입니다.\n", day);
 		printf("오늘 수행할 작업을 선택하십시오.\n\n");
@@ -213,23 +234,7 @@ void vir1()
 		}
 
 		system("cls");
-		//하루 지나고 상태출력 
-		printf("대륙별 %s 비감염자 통계:\n", type);
-		for (int i = 0; i < countryamount;i++)
-			printf(" %s 대륙: %d명(%d%%)\n", countryname[i].name, country[i],country[i]/maxcountry[i]);//대륙별 살아있는 인원
-
-		printf("총 비감염자: %d명.\n\n\n", lipp);//살아있는 총 인원
-
-		printf("Anti-%s 백신 완성도: %d%%\n",type, vac);
-		printf("현재 보유 DNA: %d\n", virus1.DNA);
-		printf("%s PROFILE\n");
-		printf("질병 LEVEL: %d \n", virus1.level);
-		printf("%s는 %d%% 확률로 감염됨.\n\n\n\n\n",type, virus1.die);
-		printf("다음 날로 넘어가려면 아무 키나 누르십시오...");
-		getch();
-		system("cls");
-		day = day + 1;
-		lipp = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
+		EndofDay();
 	}
 		if (vac >= 100) printf("패배하였습니다.\n걸린 일 수: %d", day);
 		else printf("Congradulations!승리하였습니다\n걸린 일 수: %d",day);
