@@ -223,7 +223,7 @@ void vir()
 		while (choice1 != 1 && choice1 != 2)
 		{
 			printf("유효하지 않은 명령입니다.\n");
-			scanf("%d", &choice2);
+			scanf("%d", &choice1);
 		}
 		printf("\n");
 
