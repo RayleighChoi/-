@@ -1,11 +1,13 @@
 #include<stdio.h>
+#include<stdlib.h>
 #include<Windows.h>
 #include<conio.h>
+#include<time.h>
 #define countryamount 6
 
 typedef enum upgrades_ { level = 1, infect, inhibit }upgrades;
 typedef enum choose_ { kill = 1, upgrade }choose;
-
+typedef enum events_{addDNA, addVAC, lessVAC, addmoreVAC}events;
 
 typedef struct disease_{
 	int DNA;//DNA양
@@ -246,14 +248,16 @@ void Warnvaccine()
 }
 void Randomevent()
 {
-	int randevent = rand();
+	srand(time(NULL));
+	int randevent;
+	randevent = rand();
 	system("cls");
 	switch (randevent % eventRate)
 	{
 	case addDNA: 
 		printf("\n\n   무작위 의사유전자 활성화");
 		printf(" 질병 안의 의사유전자가 우연히 활성을 갖게 되었습니다. 추가 DNA를 얻습니다.");
-		virus1.DNA += randevent % 5 + 5;
+		virus1.DNA += (randevent % 5 + 5) * 10;
 		break;
 	case addVAC:
 		printf("\n\n   과학자들의 미생물에 대한 이해도 증가");
