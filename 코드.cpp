@@ -74,7 +74,7 @@ int LVfunc()
 	printf("보유 DNA: %d\n", virus1.DNA);
 	scanf("%d", &amount);
 
-	while (virus1.DNA < amount * 100 && amount>0)
+	while (virus1.DNA < amount * 100 || amount<0)
 	{
 		printf("다시 입력해주세요. 만일 업그레이드 하지 못하는 상황이면 0을 누르세요");
 		scanf("%d", &amount);
@@ -95,7 +95,7 @@ int Infectfunc()
 	printf("보유 DNA: %d\n", virus1.DNA);
 	scanf("%d", &amount);
 
-	while (virus1.DNA < amount * 50 && amount>0)
+	while (virus1.DNA < amount * 50 || amount<0)
 	{
 		printf("다시 입력해주세요. 만일 업그레이드 하지 못하는 상황이면 0을 누르세요\n");
 		scanf("%d", &amount);
@@ -121,7 +121,7 @@ int Inhibitfunc()
 
 	scanf("%d", &amount);
 
-	while (vac < amount && vac != 0 && amount>0)
+	while (vac < amount && vac != 0 || amount<0)
 	{
 		printf("다시 입력해주세요. 만일 방해하지 못하는 상황이면 0을 누르세요\n");
 		scanf("%d", &amount);
