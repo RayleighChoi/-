@@ -2,12 +2,14 @@
 #include<stdlib.h>
 #include<Windows.h>
 #include<conio.h>
-#include<time.h>
-#define countryamount 6
+#include <time.h>
+#define countryamount 6 //국가 갯수
+#define eventRate 10//이벤트 발생 확률의 역수, 작을수록 빈도 많음. 최소 5부터.
 
 typedef enum upgrades_ { level = 1, infect, inhibit }upgrades;
 typedef enum choose_ { kill = 1, upgrade }choose;
 typedef enum events_{addDNA, addVAC, lessVAC, addmoreVAC}events;
+
 
 typedef struct disease_{
 	int DNA;//DNA양
@@ -29,6 +31,56 @@ int vac, vacwarn=0;//백신 및 개발도 경고에 대한 변수
 char type[100];//질병 이름
 int total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
 
+int upgrademenu()
+{
+	char choice;
+	system("cls");
+	if (virus1.die == 100)
+	{
+		printf("1 : LEVEL 업그레이드 \n");
+		printf("X : 감염률이 최대치(100%%)입니다. \n");//감염률100%면 업그레이드 못하게 함 
+		printf("3 : 백신 방해하기 \n");
+		printf("\n0: 뒤로가기\n");
+
+		scanf("%c", &choice);
+		printf("\n\n");
+
+		if (choice == (char)0)
+			return -1;
+
+		while (choice != (char)1 && choice != (char)3)
+		{
+			printf("유효하지 않은 명령입니다.\n");
+			scanf("%c", &choice);
+		}
+	}
+	else
+	{
+		printf("1 : LEVEL 업그레이드 \n");
+		printf("2 : 감염률 업그레이드 \n");
+		printf("3 : 백신 방해하기 \n");
+		printf("\n0: 뒤로가기\n");
+
+		scanf("%d", &choice);
+		printf("\n\n");
+
+		if (choice == 0)
+			return -1;
+			while ((char)0 >= choice || choice > (char)3)
+			{
+				printf("유효하지 않은 명령입니다.\n");
+				scanf("%c", &choice);
+			}
+	}
+	return (int)choice;
+}
+
+void clear_stdin() 
+{
+	int ch;
+	while ((ch = getchar()) != EOF && ch != '\n');
+}
+
 void killfunc(int countrynum)
 {
 	countrynum--;
@@ -40,14 +92,9 @@ void killfunc(int countrynum)
 		country[countrynum] -= 10 * (virus1.level) * (virus1.die); //선택한 대륙의 사람 감염
 		virus1.DNA += 10 * (virus1.level) * (virus1.die);      //감염자 수만큼 DNA 획득 
 		printf("%s대륙에서 %d명이 감염되어 %d명 남았습니다.\n", countryname[countrynum].name, 10 * (virus1.level) * (virus1.die), country[countrynum]);
-		printf("현재까지 획득한 DNA양은 %d입니다.\n", virus1.DNA);
-		printf("그 사이 백신이 %d%% 완성되었습니다.\n", vac);
 	}
 	else {                                                            
-		printf("%s대륙에서 %d명이 감염되어 0명 남았습니다.\n", countryname[countrynum].name, country[countrynum]);
-		virus1.DNA += country[countrynum];   //죽인만큼 DNA얻고
-		printf("현재까지 획득한 DNA양은 %d입니다.\n", virus1.DNA);
-		printf("그 사이 백신이 %d%% 완성되었습니다.\n", vac);
+		printf("%s대륙에서 %d명이 감염되어 0명 남았습니다.\n", countryname[countrynum].name, country[countrynum]);;
 		country[countrynum] = 0;//감염 가능 인원이 비감염자보다 많으면 비감염자 0으로 만듦
 	}
 	Sleep(1000);
@@ -64,7 +111,7 @@ void vaccinefunc()
 		printf("당신이 업그레이드 하는 동안 백신으로 %s대륙 에서 %d명이 살아났습니다.\n", countryname[day % 6].name, Country[day % 6] - country[day % 6]);
 		printf("\n");
 		country[day % 6] = Country[day % 6];
-		Sleep(2000);
+		Sleep(1500);
 	}
 }
 int LVfunc() 
@@ -79,6 +126,7 @@ int LVfunc()
 	while (virus1.DNA < amount * 100 || amount<0)
 	{
 		printf("다시 입력해주세요. 만일 업그레이드 하지 못하는 상황이면 0을 누르세요");
+		clear_stdin();
 		scanf("%d", &amount);
 	}
 	if (amount == 0)
@@ -100,6 +148,7 @@ int Infectfunc()
 	while (virus1.DNA < amount * 50 || amount<0)
 	{
 		printf("다시 입력해주세요. 만일 업그레이드 하지 못하는 상황이면 0을 누르세요\n");
+		clear_stdin();
 		scanf("%d", &amount);
 	}
 
@@ -123,9 +172,10 @@ int Inhibitfunc()
 
 	scanf("%d", &amount);
 
-	while (vac < amount && vac != 0 || amount<0)
+	while (((vac < amount) && (vac != 0) )|| (amount < 0))
 	{
 		printf("다시 입력해주세요. 만일 방해하지 못하는 상황이면 0을 누르세요\n");
+		clear_stdin();
 		scanf("%d", &amount);
 	}
 
@@ -136,7 +186,7 @@ int Inhibitfunc()
 	virus1.DNA -= amount * 200;
 	if (vac <= 0)
 		vac = 0;//백신 개발은 0 이하로 내려갈 수 없음.
-	Sleep(2000);
+	Sleep(1500);
 	return 0;
 }
 void EndofDay()
@@ -256,29 +306,29 @@ void Randomevent()
 	switch (randevent % eventRate)
 	{
 	case addDNA: 
-		printf("\n\n   무작위 의사유전자 활성화");
-		printf(" 질병 안의 의사유전자가 우연히 활성을 갖게 되었습니다. 추가 DNA를 얻습니다.");
-		virus1.DNA += (randevent % 10 + 10 * 10;
+		printf("\n\n   무작위 의사유전자 활성화\n\n");
+		printf(" 질병 안의 의사유전자가 우연히 활성을 갖게 되었습니다.\n 추가 DNA를 얻습니다.");
+		virus1.DNA += (randevent % 10 + 10) * 10;
 		getch();
 		break;
 	case addVAC:
-		printf("\n\n   과학자들의 미생물에 대한 이해도 증가");
-		printf(" 과학자들이 우연한 결과에 의해 %s에 대한 연구 과정에서 감염의 중요한 인자를 발견합니다.\n", type);
+		printf("\n\n   과학자들의 미생물에 대한 이해도 증가\n\n");
+		printf(" 과학자들이 우연한 결과에 의해 %s에 대한 연구 과정에서\n 감염의 중요한 인자를 발견합니다.\n", type);
 		printf(" 백신 완성도가 증가합니다.");
 		vac += randevent % 10;
 		getch();
 		break;
 	case lessVAC:
-		printf("\n\n   %s의 변종 발생",type);
-		printf("숙주 내에서 %s가 변종을 일으켰습니다. 백신 개발에 있어서 난항을 겪습니다.\n",type);
-		printf("백신 완성도가 감소합니다.");
+		printf("\n\n   %s의 변종 발생\n\n",type);
+		printf(" 숙주 내에서 %s가 변종을 일으켰습니다. 백신 개발에 있어서 난항을 겪습니다.\n",type);
+		printf(" 백신 완성도가 감소합니다.");
 		vac -= randevent % 10;
 		if (vac < 0)
 			vac = 0;
 		getch();
 		break;
 	case addmoreVAC:
-		printf("\n\n   숙주 면역계와의 공진화");
+		printf("\n\n   숙주 면역계와의 공진화\n\n");
 		printf(" 인간의 면역계가 %s에 대한 면역 기작을 갖게 되기 시작했습니다.\n", type);
 		printf(" 백신 완성도가 크게 증가합니다.");
 		vac += randevent % 10 + 10;
@@ -297,7 +347,8 @@ void vir()
 	int back;//뒤로가기 위한 변수
 	
 	
-	while (total > 0 && vac < 100) {
+	while ((total > 0) && (vac < 100))
+	{
 		Randomevent();
 	mainmenu:
 		system("cls");
@@ -306,10 +357,11 @@ void vir()
 		printf("1 : 감염시키기\n");
 		printf("2 : 업그레이드 또는 백신 막기\n");
 		
-		scanf("%d", &choice1); //죽일지 업그레이드할지 선택 
+		scanf(" %d", &choice1); //죽일지 업그레이드할지 선택 
 		while (choice1 != 1 && choice1 != 2)
 		{
 			printf("유효하지 않은 명령입니다.\n");
+			clear_stdin();
 			scanf("%d", &choice1);
 		}
 		printf("\n");
@@ -329,80 +381,54 @@ void vir()
 
 			if (choice2 == 0)
 				goto mainmenu;
+			else if (country[choice2 - 1] == 0)
+			{
+				printf("해당 대륙에는 비감염자가 없습니다!");
+				goto mainmenu;
+			}
 
-			while (0 >= choice2 || choice2 > countryamount)
+			else while (0 >= choice2 || choice2 > countryamount)
 			{
 				printf("유효하지 않은 명령입니다.\n");
+				clear_stdin();
 				scanf("%d", &choice2); 
 			}
+			
 				killfunc(choice2);
 			break;
 
 		case upgrade: //업그레이드        
-			if (virus1.die == 100)
+			choice2=upgrademenu();
+
+			switch (choice2) 
 			{
-				printf("1 : LEVEL 업그레이드 \n");
-				printf("X : 감염률이 최대치(100%%)입니다. \n");//감염률100%면 업그레이드 못하게 함 
-				printf("3 : 백신 방해하기 \n");   
-				printf("\n0: 뒤로가기\n");
-
-				scanf("%d", &choice2);
-				printf("\n\n");
-
-				if (choice2 == 0)
-					goto mainmenu;
-
-				while (1 != choice2 && choice2 != 3)
-				{
-					printf("유효하지 않은 명령입니다.\n");
-					scanf("%d", &choice2);
-				}
-			}
-			else
-			{
-			upgrademenu:
-				printf("1 : LEVEL 업그레이드 \n");
-				printf("2 : 감염률 업그레이드 \n");
-				printf("3 : 백신 방해하기 \n");
-				printf("\n0: 뒤로가기\n");
-
-				scanf("%d", &choice2);
-				printf("\n\n");
-
-				if (choice2 == 0)
-					goto mainmenu;
-				
-				while (0 >= choice2 || choice2 > 3)
-				{
-					printf("유효하지 않은 명령입니다.\n");
-					scanf("%d", &choice2);
-				}
-			}
-
-			switch (choice2) {
 			case level:  // LEVEL 업그레이드 
 				back=LVfunc();
 				if (back == -1)
-					goto upgrademenu;
+					 upgrademenu();
 				break;
 
 			case infect: //감염률 업그레이드 
 				back=Infectfunc();
 				if (back == -1)
-					goto upgrademenu;
+					 upgrademenu();
 				break;
 
 			case inhibit:  //백신 방해 
 				back=Inhibitfunc();
 				if (back == -1)
-					goto upgrademenu;
+					 upgrademenu();
+				break;
+			case -1:
+				goto mainmenu;
 				break;
 			}
 		}
-
+		Warnvaccine();
 		system("cls");
 		EndofDay();
 	}
+
 		if (vac >= 100) printf("  패배하였습니다.\n걸린 일 수: %d", day);
 		else printf("  Congradulations!승리하였습니다\n걸린 일 수: %d",day);
 		return;
@@ -420,8 +446,7 @@ int main() {
 
 	if (choice == 1)
 		Tutorial();
-
+	clear_stdin();
 	vir();
-	getch();
 	return 0;
-}//Special Thanks to. 신수&나무사관, 
+}//Special Thanks to. 신수&나무사관, 엘로이
