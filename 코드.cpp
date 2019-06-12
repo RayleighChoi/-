@@ -22,6 +22,7 @@ typedef struct countryl_{
 
 disease virus1;
 int vac, vacwarn=0;//백신 및 개발도 경고에 대한 변수
+int back;//뒤로가기 위한 변수
 
  int day = 1;//지난 일자
  int country[countryamount] = { 10000,20000,30000,40000,50000,60000 };
@@ -30,6 +31,11 @@ int vac, vacwarn=0;//백신 및 개발도 경고에 대한 변수
  countryl countryname[countryamount] = { {"Asia"},{"Europe"},{"Africa"},{"South Africa"},{"North Africa"},{"Australia"} };// 네이밍 A~F
 char type[100];//질병 이름
 int total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
+void clear_stdin() 
+{
+	int ch;
+	while ((ch = getchar()) != EOF && ch != '\n');
+}
 
 int upgrademenu()
 {
@@ -74,13 +80,8 @@ int upgrademenu()
 				scanf("%d", &choice);
 			}
 	}
+	back = 0;
 	return choice;
-}
-
-void clear_stdin() 
-{
-	int ch;
-	while ((ch = getchar()) != EOF && ch != '\n');
 }
 
 void killfunc(int countrynum)
@@ -125,9 +126,9 @@ int LVfunc()
 	printf("보유 DNA: %d\n", virus1.DNA);
 	scanf("%d", &amount);
 
-	while (virus1.DNA < amount * 100 || amount<0)
+	while (virus1.DNA < amount * 100 || amount < 0)
 	{
-		printf("다시 입력해주세요. 만일 업그레이드 하지 못하는 상황이면 0을 누르세요");
+		printf("다시 입력해주세요. 만일 업그레이드 하지 못하는 상황이면 0을 누르세요\n");
 		clear_stdin();
 		scanf("%d", &amount);
 	}
@@ -147,7 +148,7 @@ int Infectfunc()
 	printf("보유 DNA: %d\n", virus1.DNA);
 	scanf("%d", &amount);
 
-	while (virus1.DNA < amount * 50 || amount<0)
+	while (virus1.DNA < amount * 50 || amount < 0)
 	{
 		printf("다시 입력해주세요. 만일 업그레이드 하지 못하는 상황이면 0을 누르세요\n");
 		clear_stdin();
@@ -174,7 +175,7 @@ int Inhibitfunc()
 
 	scanf("%d", &amount);
 
-	while (((vac < amount) && (vac != 0) )|| (amount < 0))
+	while (virus1.DNA < amount * 200 || amount < 0 || vac < amount)
 	{
 		printf("다시 입력해주세요. 만일 방해하지 못하는 상황이면 0을 누르세요\n");
 		clear_stdin();
@@ -364,8 +365,6 @@ void vir()
 	virus1.die = 4;
 	vac = 0;//초기값설정 
 	int choice1, choice2;
-	int back;//뒤로가기 위한 변수
-	
 	
 	while ((total > 0) && (vac < 100))
 	{
@@ -417,7 +416,8 @@ void vir()
 				killfunc(choice2);
 			break;
 
-		case upgrade: //업그레이드        
+		case upgrade: //업그레이드   
+			upgradesave:
 			choice2=upgrademenu();
 
 			switch (choice2) 
@@ -425,19 +425,19 @@ void vir()
 			case level:  // LEVEL 업그레이드 
 				back=LVfunc();
 				if (back == -1)
-					 upgrademenu();
+					 goto upgradesave;
 				break;
 
 			case infect: //감염률 업그레이드 
 				back=Infectfunc();
 				if (back == -1)
-					 upgrademenu();
+					 goto upgradesave;
 				break;
 
 			case inhibit:  //백신 방해 
 				back=Inhibitfunc();
 				if (back == -1)
-					 upgrademenu();
+					goto upgradesave;
 				break;
 			case -1:
 				goto mainmenu;
