@@ -23,12 +23,11 @@ typedef struct countryl_{
 disease virus1;
 int vac, vacwarn=0;//백신 및 개발도 경고에 대한 변수
 int back;//뒤로가기 위한 변수
-FILE *fp;
 
  int day = 1;//지난 일자
  int country[countryamount] = { 1568776,2310224,594860,1100010,385742,528720,38895 };
  int Country[countryamount] = { 1568776,2310224,594860,1100010,385742,528720,38895 };//대륙별 인구수
- int maxcountry[countryamount]= { 1568776,2310224,594860,1100010,385742,528720,38895 };
+ const int maxcountry[countryamount]= { 1568776,2310224,594860,1100010,385742,528720,38895 };//대륙별 최대 인구수
  countryl countryname[countryamount] = { {"East Asia"},{"West Asia"},{"Europe"},{"Africa"},{"South America"},{"North America"},{"Australia"} };// 네이밍 A~F
 char type[100];//질병 이름
 int total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5]+country[6];//총 인구수
@@ -123,9 +122,9 @@ int LVfunc()
 	int amount; //얼마나 업그레이드 할건지 
 	
 	printf("얼마나 업그레이드 하실겁니까?\n");
-	printf("LEVEL 1 당 DNA 10*level개가 필요합니다.\n");
+	printf("LEVEL당 DNA 10*level개가 필요합니다.\n");
 	printf("0:뒤로가기\n\n");
-	printf("보유 DNA: %d\n", virus1.DNA);
+	printf("보유 DNA: %d     현재 level: %d\n", virus1.DNA, virus1.level);
 	scanf("%d", &amount);
 
 	while (virus1.DNA < amount * 10 || amount < 0)
@@ -136,7 +135,7 @@ int LVfunc()
 	}
 	if (amount == 0)
 		return -1;
-	virus1.DNA -= amount * (amount + 1) * 5;              //DNA사용하고 
+	virus1.DNA -= amount * (amount + 1) / 2 * 10;              //DNA사용하고 
 	virus1.level += amount;                    //업그레이드 해주고 
 
 	vaccinefunc();
@@ -148,7 +147,7 @@ int Infectfunc()
 	printf("얼마 업그레이드 하실겁니까?\n");                      //얼마나 업그레이드 할건지 
 	printf("감염률 1%%당 DNA 5개가 필요합니다.\n");
 	printf("0:뒤로가기\n\n");
-	printf("보유 DNA: %d     현재 감염률: %d\n", virus1.DNA, virus1.die);
+	printf("보유 DNA: %d     현재 감염률: %d%%\n", virus1.DNA, virus1.die);
 	scanf("%d", &amount);
 
 	while (virus1.DNA < amount * 5 || amount < 0)
@@ -175,7 +174,7 @@ int Inhibitfunc()
 	printf("백신의 완성도를 얼마 감소시킬겁니까?\n");
 	printf("백신의 완성도 1%% 감소시키는데 DNA 50개가 필요합니다.\n");
 	printf("0:뒤로가기\n\n");
-	printf("보유 DNA: %d     백신 완성도: %d\n", virus1.DNA, vac);
+	printf("보유 DNA: %d     백신 완성도: %d%%\n", virus1.DNA, vac);
 
 	scanf("%d", &amount);
 
@@ -199,7 +198,12 @@ void EndofDay()
 	total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5]+country[6];
 	vac += virus1.level / 20 + virus1.die / 25;//기본 연구량 증가
 	for (int i = 0;i < countryamount;i++)
+	{
 		country[i] -= (maxcountry[i] - country[i])*virus1.die / 10;//기본 감염자 수 증가
+		if (country[i] <= 0)
+			country[i] = 0;
+	}
+
 	printf("%s PROFILE\n", type);
 
 	printf("대륙별 %s 비감염자 통계:\n", type);
