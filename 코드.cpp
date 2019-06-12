@@ -33,7 +33,7 @@ int total = country[0] + country[1] + country[2] + country[3] + country[4] + cou
 
 int upgrademenu()
 {
-	char choice;
+	int choice;
 	system("cls");
 	if (virus1.die == 100)
 	{
@@ -42,16 +42,17 @@ int upgrademenu()
 		printf("3 : 백신 방해하기 \n");
 		printf("\n0: 뒤로가기\n");
 
-		scanf("%c", &choice);
+		scanf("%d", &choice);
 		printf("\n\n");
 
-		if (choice == (char)0)
+		if (choice == 0)
 			return -1;
 
-		while (choice != (char)1 && choice != (char)3)
+		while (choice != 1 && choice != 3)
 		{
 			printf("유효하지 않은 명령입니다.\n");
-			scanf("%c", &choice);
+			clear_stdin();
+			scanf("%d", &choice);
 		}
 	}
 	else
@@ -66,13 +67,14 @@ int upgrademenu()
 
 		if (choice == 0)
 			return -1;
-			while ((char)0 >= choice || choice > (char)3)
+			while (0 >= choice || choice > 3)
 			{
 				printf("유효하지 않은 명령입니다.\n");
-				scanf("%c", &choice);
+				clear_stdin();
+				scanf("%d", &choice);
 			}
 	}
-	return (int)choice;
+	return choice;
 }
 
 void clear_stdin() 
@@ -213,6 +215,7 @@ void EndofDay()
 
 void Startscreen()
 {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);//흰 배경에 붉은 글자
 	printf("                               \n");
 	printf("                               \n");
 	printf("           .,    ,.            \n");
@@ -241,6 +244,7 @@ void Startscreen()
 	printf("     .*@@@@!     .*@@@@$-      \n");
 	printf("        ..          ...        \n");
 	printf("         Infection Inc.        \n");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 	printf("   2406 박세연   2416 전상진   \n");
 	printf("   2417  정욱    2420 최장헌   \n");
 	printf("  시작하려면 질병 이름을 입력  \n");
@@ -270,28 +274,36 @@ void Warnvaccine()
 	system("cls");
 	if (vacwarn==0&&vac >= 25)
 	{
-	printf("Anti-%s 약물에 대한 연구가 25%% 완료되었습니다.\n",type);
-	printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮추는 것을 고려하십시오.");
-	vacwarn++;
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 251);
+		printf("Anti-%s 약물에 대한 연구가 25%% 완료되었습니다.\n", type);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+		printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮추는 것을 고려하십시오.");
+		vacwarn++;
 	Sleep(1500);
 	}
 	else if (vacwarn == 1 &&vac >= 50)
 	{
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 251);
 		printf("Anti-%s 약물에 대한 연구가 50%% 완료되었습니다.\n", type);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 		printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮출 수 있습니다.");
 		vacwarn++;
 		Sleep(1500);
 	}
 	else if (vacwarn == 2 &&vac >= 75)
 	{
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 251);
 		printf("Anti-%s 약물에 대한 연구가 75%% 완료되었습니다.\n", type);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 		printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮춰야합니다.");
 		vacwarn++;
 		Sleep(1500);
 	}
 	else if (vac >= 95)
 	{
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 251);
 		printf("Anti-%s 약물에 대한 연구가 95%% 완료되었습니다.\n", type);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 		printf("업그레이드 탭의 백신 막기를 통해 연구 진행도를 낮출 필요가 있습니다!");
 		Sleep(1500);
 	}
@@ -306,20 +318,26 @@ void Randomevent()
 	switch (randevent % eventRate)
 	{
 	case addDNA: 
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 251);
 		printf("\n\n   무작위 의사유전자 활성화\n\n");
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 		printf(" 질병 안의 의사유전자가 우연히 활성을 갖게 되었습니다.\n 추가 DNA를 얻습니다.");
 		virus1.DNA += (randevent % 10 + 10) * 10;
 		getch();
 		break;
 	case addVAC:
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
 		printf("\n\n   과학자들의 미생물에 대한 이해도 증가\n\n");
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 		printf(" 과학자들이 우연한 결과에 의해 %s에 대한 연구 과정에서\n 감염의 중요한 인자를 발견합니다.\n", type);
 		printf(" 백신 완성도가 증가합니다.");
 		vac += randevent % 10;
 		getch();
 		break;
 	case lessVAC:
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 251);
 		printf("\n\n   %s의 변종 발생\n\n",type);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 		printf(" 숙주 내에서 %s가 변종을 일으켰습니다. 백신 개발에 있어서 난항을 겪습니다.\n",type);
 		printf(" 백신 완성도가 감소합니다.");
 		vac -= randevent % 10;
@@ -328,7 +346,9 @@ void Randomevent()
 		getch();
 		break;
 	case addmoreVAC:
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
 		printf("\n\n   숙주 면역계와의 공진화\n\n");
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 		printf(" 인간의 면역계가 %s에 대한 면역 기작을 갖게 되기 시작했습니다.\n", type);
 		printf(" 백신 완성도가 크게 증가합니다.");
 		vac += randevent % 10 + 10;
