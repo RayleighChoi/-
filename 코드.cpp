@@ -3,8 +3,8 @@
 #include<Windows.h>
 #include<conio.h>
 #include <time.h>
-#define countryamount 6 //국가 갯수
-#define eventRate 10//이벤트 발생 확률의 역수, 작을수록 빈도 많음. 최소 5부터.
+#define countryamount 7 //국가 갯수
+#define eventRate 10//이벤트 발생 확률의 역수, 작을수록 빈도 많음. 최소 5부터
 
 typedef enum upgrades_ { level = 1, infect, inhibit }upgrades;
 typedef enum choose_ { kill = 1, upgrade }choose;
@@ -23,19 +23,20 @@ typedef struct countryl_{
 disease virus1;
 int vac, vacwarn=0;//백신 및 개발도 경고에 대한 변수
 int back;//뒤로가기 위한 변수
+FILE *fp;
 
  int day = 1;//지난 일자
- int country[countryamount] = { 10000,20000,30000,40000,50000,60000 };
- int Country[countryamount] = { 10000,20000,30000,40000,50000,60000 };//대륙별 인구수
- int maxcountry[countryamount]= { 10000,20000,30000,40000,50000,60000 };
- countryl countryname[countryamount] = { {"Asia"},{"Europe"},{"Africa"},{"South Africa"},{"North Africa"},{"Australia"} };// 네이밍 A~F
+ int country[countryamount] = { 1568776,2310224,594860,1100010,385742,528720,38895 };
+ int Country[countryamount] = { 1568776,2310224,594860,1100010,385742,528720,38895 };//대륙별 인구수
+ int maxcountry[countryamount]= { 1568776,2310224,594860,1100010,385742,528720,38895 };
+ countryl countryname[countryamount] = { {"East Asia"},{"West Asia"},{"Europe"},{"Africa"},{"South America"},{"North America"},{"Australia"} };// 네이밍 A~F
 char type[100];//질병 이름
-int total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
+int total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5]+country[6];//총 인구수
 void clear_stdin() 
 {
 	int ch;
 	while ((ch = getchar()) != EOF && ch != '\n');
-}
+}//입력 버퍼 초기화
 
 int upgrademenu()
 {
@@ -87,14 +88,14 @@ int upgrademenu()
 void killfunc(int countrynum)
 {
 	countrynum--;
-	vac += (virus1.die) / 4; //감염률/4 만큼 백신 연구 올라감
+	vac += (virus1.die) / 3 + virus1.level / 10; //감염률/3+level/10 만큼 백신 연구 올라감
 	if (vac > 100) vac = 100;            //백신 최대치는 100
 
-	if (country[countrynum] > 10 * (virus1.level) * (virus1.die))
+	if (country[countrynum] > 100 * (virus1.level) * (virus1.die))
 	{
-		country[countrynum] -= 10 * (virus1.level) * (virus1.die); //선택한 대륙의 사람 감염
-		virus1.DNA += 10 * (virus1.level) * (virus1.die);      //감염자 수만큼 DNA 획득 
-		printf("%s대륙에서 %d명이 감염되어 %d명 남았습니다.\n", countryname[countrynum].name, 10 * (virus1.level) * (virus1.die), country[countrynum]);
+		country[countrynum] -= 100 * (virus1.level) * (virus1.die); //선택한 대륙의 사람 감염
+		virus1.DNA += (virus1.level) * (virus1.die);      //감염자 수/100 만큼 DNA 획득 
+		printf("%s대륙에서 %d명이 감염되어 %d명 남았습니다.\n", countryname[countrynum].name, 100 * (virus1.level) * (virus1.die), country[countrynum]);
 	}
 	else {                                                            
 		printf("%s대륙에서 %d명이 감염되어 0명 남았습니다.\n", countryname[countrynum].name, country[countrynum]);;
@@ -104,8 +105,8 @@ void killfunc(int countrynum)
 }
 void vaccinefunc()
 {
-	if (country[day % 6] + virus1.level * vac <= Country[day % 6]) {
-		country[day % 6] += virus1.level * vac;
+	if (country[day % countryamount] + virus1.level * vac <= Country[day % countryamount]) {
+		country[day % countryamount] += virus1.level * vac;
 		printf("당신이 업그레이드 하는 동안 백신으로 %s대륙 에서 %d명이 살아났습니다.\n", countryname[day % 6].name, virus1.level*vac);
 		printf("\n");
 	}
@@ -113,7 +114,7 @@ void vaccinefunc()
 
 		printf("당신이 업그레이드 하는 동안 백신으로 %s대륙 에서 %d명이 살아났습니다.\n", countryname[day % 6].name, Country[day % 6] - country[day % 6]);
 		printf("\n");
-		country[day % 6] = Country[day % 6];
+		country[day % countryamount] = Country[day % countryamount];
 		Sleep(1500);
 	}
 }
@@ -122,19 +123,20 @@ int LVfunc()
 	int amount; //얼마나 업그레이드 할건지 
 	
 	printf("얼마나 업그레이드 하실겁니까?\n");
-	printf("LEVEL 1 당 DNA 100개가 필요합니다.\n");
+	printf("LEVEL 1 당 DNA 10*level개가 필요합니다.\n");
+	printf("0:뒤로가기\n\n");
 	printf("보유 DNA: %d\n", virus1.DNA);
 	scanf("%d", &amount);
 
-	while (virus1.DNA < amount * 100 || amount < 0)
+	while (virus1.DNA < amount * 10 || amount < 0)
 	{
-		printf("다시 입력해주세요. 만일 업그레이드 하지 못하는 상황이면 0을 누르세요\n");
+		printf("다시 입력해주세요.\n");
 		clear_stdin();
 		scanf("%d", &amount);
 	}
 	if (amount == 0)
 		return -1;
-	virus1.DNA -= amount * 100;              //DNA사용하고 
+	virus1.DNA -= amount * (amount + 1) * 5;              //DNA사용하고 
 	virus1.level += amount;                    //업그레이드 해주고 
 
 	vaccinefunc();
@@ -144,11 +146,12 @@ int Infectfunc()
 {
 	int amount = 0;
 	printf("얼마 업그레이드 하실겁니까?\n");                      //얼마나 업그레이드 할건지 
-	printf("감염률 1%%당 DNA 50개가 필요합니다.\n");
-	printf("보유 DNA: %d\n", virus1.DNA);
+	printf("감염률 1%%당 DNA 5개가 필요합니다.\n");
+	printf("0:뒤로가기\n\n");
+	printf("보유 DNA: %d     현재 감염률: %d\n", virus1.DNA, virus1.die);
 	scanf("%d", &amount);
 
-	while (virus1.DNA < amount * 50 || amount < 0)
+	while (virus1.DNA < amount * 5 || amount < 0)
 	{
 		printf("다시 입력해주세요. 만일 업그레이드 하지 못하는 상황이면 0을 누르세요\n");
 		clear_stdin();
@@ -158,7 +161,7 @@ int Infectfunc()
 	if (amount == 0)
 		return -1;
 
-	virus1.DNA -= amount * 50;                               //DNA 사용한만큼 빼주고 
+	virus1.DNA -= amount * 5;                               //DNA 사용한만큼 빼주고 
 	virus1.die += amount;
 
 	if (virus1.die > 100)  
@@ -170,14 +173,15 @@ int Inhibitfunc()
 {
 	int amount = 0;
 	printf("백신의 완성도를 얼마 감소시킬겁니까?\n");
-	printf("백신의 완성도 1%% 감소시키는데 DNA 200개가 필요합니다.\n");
-	printf("보유 DNA: %d\n", virus1.DNA);
+	printf("백신의 완성도 1%% 감소시키는데 DNA 50개가 필요합니다.\n");
+	printf("0:뒤로가기\n\n");
+	printf("보유 DNA: %d     백신 완성도: %d\n", virus1.DNA, vac);
 
 	scanf("%d", &amount);
 
-	while (virus1.DNA < amount * 200 || amount < 0 || vac < amount)
+	while (virus1.DNA < amount * 50 || amount < 0 || vac < amount)
 	{
-		printf("다시 입력해주세요. 만일 방해하지 못하는 상황이면 0을 누르세요\n");
+		printf("다시 입력해주세요.\n");
 		clear_stdin();
 		scanf("%d", &amount);
 	}
@@ -186,15 +190,16 @@ int Inhibitfunc()
 		return -1;
 
 	vac -= amount;
-	virus1.DNA -= amount * 200;
-	if (vac <= 0)
-		vac = 0;//백신 개발은 0 이하로 내려갈 수 없음.
+	virus1.DNA -= amount * 50;
 	Sleep(1500);
 	return 0;
 }
 void EndofDay()
 {
-	total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5];
+	total = country[0] + country[1] + country[2] + country[3] + country[4] + country[5]+country[6];
+	vac += virus1.level / 20 + virus1.die / 25;//기본 연구량 증가
+	for (int i = 0;i < countryamount;i++)
+		country[i] -= (maxcountry[i] - country[i])*virus1.die / 10;//기본 감염자 수 증가
 	printf("%s PROFILE\n", type);
 
 	printf("대륙별 %s 비감염자 통계:\n", type);
@@ -211,7 +216,7 @@ void EndofDay()
 	printf("다음 날로 넘어가려면 아무 키나 누르십시오...");
 	getch();
 	system("cls");
-	day = day + 1;
+	day++;
 }
 
 void Startscreen()
@@ -268,6 +273,7 @@ void Tutorial()
 	Sleep(1000);
 	printf("견투를 빌며, 게임을 즐기시길 바랍니다!\n");
 	Sleep(1000);
+	printf("\n\n넘어가려면 아무 키나 누르십시오...");
 	getch();
 }
 void Warnvaccine()
@@ -323,7 +329,8 @@ void Randomevent()
 		printf("\n\n   무작위 의사유전자 활성화\n\n");
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 		printf(" 질병 안의 의사유전자가 우연히 활성을 갖게 되었습니다.\n 추가 DNA를 얻습니다.");
-		virus1.DNA += (randevent % 10 + 10) * 10;
+		printf("\n\n넘어가려면 아무 키나 누르십시오...");
+		virus1.DNA += (randevent % 10 + 10);
 		getch();
 		break;
 	case addVAC:
@@ -332,6 +339,7 @@ void Randomevent()
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 		printf(" 과학자들이 우연한 결과에 의해 %s에 대한 연구 과정에서\n 감염의 중요한 인자를 발견합니다.\n", type);
 		printf(" 백신 완성도가 증가합니다.");
+		printf("\n\n넘어가려면 아무 키나 누르십시오...");
 		vac += randevent % 10;
 		getch();
 		break;
@@ -341,6 +349,7 @@ void Randomevent()
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 		printf(" 숙주 내에서 %s가 변종을 일으켰습니다. 백신 개발에 있어서 난항을 겪습니다.\n",type);
 		printf(" 백신 완성도가 감소합니다.");
+		printf("\n\n넘어가려면 아무 키나 누르십시오...");
 		vac -= randevent % 10;
 		if (vac < 0)
 			vac = 0;
@@ -352,6 +361,7 @@ void Randomevent()
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 		printf(" 인간의 면역계가 %s에 대한 면역 기작을 갖게 되기 시작했습니다.\n", type);
 		printf(" 백신 완성도가 크게 증가합니다.");
+		printf("\n\n넘어가려면 아무 키나 누르십시오...");
 		vac += randevent % 10 + 10;
 		getch();
 		break;
@@ -469,4 +479,4 @@ int main() {
 	clear_stdin();
 	vir();
 	return 0;
-}//Special Thanks to. 신수&나무사관, 엘로이
+}//Special Thanks to. 신수, 나무사관, 엘로이
